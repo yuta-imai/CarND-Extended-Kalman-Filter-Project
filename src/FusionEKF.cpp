@@ -45,10 +45,10 @@ FusionEKF::FusionEKF() {
 
   // Initial covariance Matrix
   ekf_.P_ = MatrixXd(4,4);
-  ekf_.P_ << 10,  0,   0,   0,
-             0,   10,  0,   0,
-             0,   0,   100, 0,
-             0,   0,   0,   100;
+  ekf_.P_ << 10, 0, 0, 0,
+			   0, 10, 0, 0,
+			   0, 0, 100, 0,
+			   0, 0, 0, 100;
 
 }
 
@@ -87,6 +87,13 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       // Convert each coordinate
       float x  = rho * cos(phi);
       float y  = rho * sin(phi);
+      if ( x < EPS ) {
+        x = EPS;
+      }
+
+      if ( y < EPS ) {
+        y = EPS;
+      }
       float vx = rho_dot * cos(phi);
       float vy = rho_dot * sin(phi);
 

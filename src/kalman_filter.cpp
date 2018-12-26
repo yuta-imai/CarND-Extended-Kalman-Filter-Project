@@ -32,9 +32,7 @@ void KalmanFilter::Predict() {
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
-  VectorXd z_pred = H_ * x_;
-  VectorXd y      = z - z_pred;
-
+  VectorXd y      = z - H_ * x_;
   UpdateState(y);
 }
 
@@ -53,10 +51,16 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   }
 
   VectorXd h = VectorXd(3);
-
   h << rho, theta, rho_dot;
-
   VectorXd y = z - h;
+
+  while ( y(1) > M_PI || y(1) < -M_PI ) {
+    if ( y(1) > M_PI ) {
+      y(1) -= 2 * M_PI;
+    } else {
+      y(1) += 2 * M_PI;
+    }
+  }
 
   UpdateState(y);
 }
