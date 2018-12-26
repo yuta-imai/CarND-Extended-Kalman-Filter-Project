@@ -41,7 +41,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
    * TODO: update the state by using Kalman Filter equations
    */
   double rho     = sqrt(x_(0)*x_(0) + x_(1)*x_(1));
-  double theta   = atan2(x_(1), x_(0));
+  double phi   = atan2(x_(1), x_(0));
   double rho_dot;
 
   if (fabs(rho) < EPS) {
@@ -51,9 +51,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   }
 
   VectorXd h = VectorXd(3);
-  h << rho, theta, rho_dot;
+  h << rho, phi, rho_dot;
   VectorXd y = z - h;
 
+  //This normalization idea came from https://github.com/darienmt/CarND-Extended-Kalman-Filter-P1/blob/master/src/kalman_filter.cpp#L51
   while ( y(1) > M_PI || y(1) < -M_PI ) {
     if ( y(1) > M_PI ) {
       y(1) -= 2 * M_PI;
